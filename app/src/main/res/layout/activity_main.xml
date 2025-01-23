@@ -23,13 +23,60 @@
         android:textColor="@color/white"
         android:fontFamily="sans-serif-light"/>
 
+    <LinearLayout
+        android:id="@+id/filterLayout"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTitle"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtro"
+            android:layout_marginRight="20sp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-light"
+            android:textSize="20sp"
+            />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/TextInputEditTextFilter"
+            android:layout_width="200sp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20sp"
+            android:textColor="@color/white">
+        </com.google.android.material.textfield.TextInputEditText>
+
+        <Button
+            android:id="@+id/filterButton"
+            android:layout_width="100sp"
+            android:layout_height="40sp"
+            android:text="Buscar"
+            android:fontFamily="sans-serif-light"
+            />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCocktails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="170dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+    
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/appTitle" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

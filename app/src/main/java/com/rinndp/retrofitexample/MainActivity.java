@@ -1,19 +1,19 @@
 package com.rinndp.retrofitexample;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rinndp.retrofitexample.recyclerview.CocktailRVAdapter;
-import com.rinndp.retrofitexample.recyclerview.CocktailViewModel;
 
+import java.util.Collection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -22,7 +22,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    CocktailViewModel cocktailViewModel;
+    List<Drinks.Cocktail> mListaCocktails;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,32 +31,39 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<Drinks> call = apiInterface.getDrinksByLicour("Gin");
-
         RecyclerView recyclerView = findViewById(R.id.recyclerViewCocktails);
-        CocktailRVAdapter adapter = new CocktailRVAdapter(new CocktailRVAdapter.CocktailDiff(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-        this.cocktailViewModel = new ViewModelProvider(this).get(CocktailViewModel.class);
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        this.progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
+        Button filterButton = findViewById(R.id.filterButton);
 
-        call.enqueue(new Callback<Drinks>() {
+        filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<Drinks> call, Response<Drinks> response) {
-                List<Drinks.Cocktail> mListaCocktail = null;
+            public void onClick(View view) {
+                EditText filterEditText = findViewById(R.id.TextInputEditTextFilter);
+                String alcoholType = filterEditText.getText().toString();
+                Call<Drinks> call = apiInterface.getDrinksByLicour(alcoholType);
+                progressBar.setVisibility(View.VISIBLE);
+                call.enqueue(new Callback<Drinks>() {
+                    @Override
+                    public void onResponse(Call<Drinks> call, Response<Drinks> response) {
+                        Drinks drinks = response.body();
 
-                Log.d("Código", response.code()+"");
-                Drinks drinksResponse = response.body();
-                for (Drinks.Cocktail cocktail: drinksResponse.drinks) {
-                    Drinks.Cocktail cocktailAñadir = new Drinks.Cocktail(cocktail.cocktailName, cocktail.cocktailImageUrl, cocktail.cocktailId);
-                    mListaCocktail.add(cocktailAñadir);
-                }
-            }
+                        if (drinks != null)
+                            mListaCocktails = drinks.getDrinks();
 
-            @Override
-            public void onFailure(Call<Drinks> call, Throwable throwable) {
-                Log.d("CALL -> mal", throwable.toString());
+                        CocktailRVAdapter adapter = new CocktailRVAdapter(mListaCocktails, MainActivity.this);
+                        recyclerView.setAdapter(adapter);
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Drinks> call, Throwable throwable) {
+                        Log.d("CALL -> mal", throwable.toString());
+                    }
+                });
             }
         });
     }
