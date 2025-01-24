@@ -8,7 +8,7 @@ public class ApiClient {
 
     public static String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1/";
     private static Retrofit retrofit;
-    static Retrofit getClient() {
+    public static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();

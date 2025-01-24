@@ -15,6 +15,8 @@ public class Drinks {
         public String cocktailImageUrl;
         @SerializedName("idDrink")
         public String cocktailId;
+        @SerializedName("strInstructionsES")
+        public String cocktailInstructionsES;
 
         public Cocktail (String name, String imageUrl, String cocktailId) {
             this.cocktailName = name;
@@ -32,6 +34,10 @@ public class Drinks {
 
         public String getCocktailId() {
             return cocktailId;
+        }
+
+        public String getCocktailInstructionsES() {
+            return cocktailInstructionsES;
         }
     }
 

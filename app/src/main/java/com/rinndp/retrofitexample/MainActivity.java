@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 EditText filterEditText = findViewById(R.id.TextInputEditTextFilter);
                 String alcoholType = filterEditText.getText().toString();
-                Call<Drinks> call = apiInterface.getDrinksByLicour(alcoholType);
                 progressBar.setVisibility(View.VISIBLE);
+
+                Call<Drinks> call = apiInterface.getDrinksByLicour(alcoholType);
                 call.enqueue(new Callback<Drinks>() {
                     @Override
                     public void onResponse(Call<Drinks> call, Response<Drinks> response) {
